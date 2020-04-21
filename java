@@ -726,3 +726,340 @@ public class Source{
 }
 
 ####################################################
+
+### Max Digit in a String ###
+
+import java.util.*;
+import java.util.Scanner;
+
+public class Source {
+    public static int getMaxDigit(String s) {
+        int m = -1;
+        if (s == null)
+            return m;
+        for (int i = 0; i < s.length(); i++)
+        {
+            if (s.charAt(i) >= '0' && s.charAt(i) <= '9')
+            {
+                if (m < s.charAt(i)-'0')
+                m = s.charAt(i)-'0';
+            }
+        }
+        return m;
+    }
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String s = in.nextLine();
+        int ans = getMaxDigit(s);
+        if (ans == -1)
+            System.out.println("No digits in string");
+        else
+            System.out.println("Max digit : " + ans);
+    }
+}
+
+############################################################
+
+
+### Count Unique Characters ###
+
+import java.util.*;
+import java.util.Scanner;
+
+public class Source {
+    public static int getUniqueCharacterCount(String s) {
+        if (s == null)
+            return -1;
+        s = s.toLowerCase();
+        HashMap<Character, Integer> hash = new HashMap<Character, Integer>(); 
+        for (int i = 0; i < s.length(); i++)
+        {
+            if (s.charAt(i) != ' ')
+            {
+                Integer c = hash.get(s.charAt(i));
+                if (hash.get(s.charAt(i)) == null)
+                    hash.put(s.charAt(i), 1);
+                else
+                    hash.put(s.charAt(i), ++c);
+            }
+        }
+        int count = 0;
+        Iterator hashit = hash.entrySet().iterator(); 
+
+        while (hashit.hasNext()) { 
+            Map.Entry mapElement = (Map.Entry)hashit.next(); 
+            int c = ((int)mapElement.getValue()); 
+            if (c == 1)
+                count++;
+        }
+        if (count == 0)
+            return -1;
+        return count;
+    }
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String s = in.nextLine();
+        int ans = getUniqueCharacterCount(s);
+        if (ans == -1)
+            System.out.println("No unique character/s");
+        else
+            System.out.println(ans + " unique character/s");
+    }
+}
+
+##############################################################
+
+### Calculate Age ###
+
+import java.util.*;
+import java.util.Scanner;
+import java.time.Period;
+import java.time.LocalDate;
+
+class AgeCalculator {
+    public int[] calculateAge(String date) {
+        if (date == null)
+            return null;
+        List<Integer> a = new ArrayList<Integer>();
+        int[] ans = new int[2];
+        if (date != null) {
+            StringTokenizer st1 =  new StringTokenizer(date, "/"); 
+            while (st1.hasMoreTokens()) 
+                a.add(Integer.parseInt(st1.nextToken()));   
+        }
+        int day = a.get(0);
+        int month = a.get(1);
+        int year = a.get(2);
+        
+        LocalDate birth = LocalDate.of(year, month, 1);
+        LocalDate cur = LocalDate.of(2019, 4, 1);
+        
+        if (birth.isAfter(cur) || birth.isEqual(cur))
+            return null;
+        else
+        {
+            Period p = Period.between(birth, cur);
+            ans[0] = p.getYears();
+            ans[1] = p.getMonths();
+        }
+        return ans;  
+    }
+}
+
+public class Source {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String date = in.nextLine();
+        AgeCalculator c = new AgeCalculator();
+        int[] ans = c.calculateAge(date);
+        if (ans == null)
+            System.out.println("Invalid date of birth");
+        else
+        {
+            if (ans[1] == 0)
+                System.out.println("Years : " + ans[0]);
+            else if (ans[0] == 0)
+                System.out.println("Months : " + ans[1]);
+            else
+                System.out.println("Years : " + ans[0] + ", Months : " + ans[1]); 
+        }
+    }
+}
+
+##################################################################
+
+
+### Color Code ###
+
+import java.util.*;
+import java.util.Scanner;
+
+public class Source {
+     public static int validateHexCode(String code) {
+        if (code == null)
+            return -1;
+        int len = code.length();
+        if (len != 7)
+            return -1;
+        if (code.charAt(0) != '#')
+            return -1;
+            
+        for (int i = 1; i < len; i++)
+        {
+            if (Character.isDigit(code.charAt(i)))
+                continue;
+            else if (code.charAt(i) < 'A' || code.charAt(i) > 'F')
+                return -1;
+        }
+        return 1;
+    }
+    
+    public static int validateDecimalCode(String code) {
+        if (code == null)
+            return -1;
+        int len = code.length();
+        String rgb = code.substring(0, 4);
+        if (!rgb.equals("rgb("))
+            return -1;
+        String dcode = code.substring(4, len-1);
+        for (int i = 0; i < dcode.length(); i++)
+        {
+            if ((dcode.charAt(i) < '0' || dcode.charAt(i) > '9') && dcode.charAt(i) != ',')
+                return -1;
+        }
+        List<Integer> a = new ArrayList<Integer>();
+        if (dcode != null) {
+            StringTokenizer st =  new StringTokenizer(dcode, ","); 
+            while (st.hasMoreTokens()) 
+                a.add(Integer.parseInt(st.nextToken()));   
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            if (a.get(i) < 0 || a.get(i) > 255)
+                return -1;
+        }
+        return 1;
+    }
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int c = in.nextInt();
+        String code = in.next();
+        if (c == 1)
+        {
+            if (validateHexCode(code) == 1)
+                System.out.println("Valid Code");
+            else
+                System.out.println("Invalid Code");
+        }
+        else if (c == 2)
+        {
+            if (validateDecimalCode(code) == 1)
+                System.out.println("Valid Code");
+            else
+                System.out.println("Invalid Code");
+        }
+        else
+            System.out.println("Invalid choice");
+    }
+}
+
+##########################################################################
+
+### Date Validation ###
+
+import java.util.Scanner;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+class Utility {
+    private static boolean isValidDateFormat(String date) {
+        int c1 = 0, c2 = 0, c3 = 0;
+        String pattern = "";
+        for (int i = 0; i < date.length(); i++)
+        {
+            if (date.charAt(i) == '/')
+                c1++;
+            if (date.charAt(i) == '-')
+                c2++;
+            if (date.charAt(i) == '.')
+                c3++;
+        }
+        if (c1 == 2 && c2 == 0 && c3 == 0)
+            pattern = "(0?[1-9]|[12][0-9]|3[01])\\/(0?[1-9]|1[0-2])\\/([0-9]{4})";
+        else if (c1 == 0 && c2 == 2 && c3 == 0)
+            pattern = "(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[0-2])-([0-9]{4})";
+        else if (c1 == 0 && c2 == 0 && c3 == 2)
+            pattern = "(0?[1-9]|[12][0-9]|3[01]).(0?[1-9]|1[0-2]).([0-9]{4})";
+        else
+            return false;
+        boolean result = false;
+        if (date.matches(pattern))
+            result = true;
+        return result;
+    }
+    static int checkDate(String date) {
+        if (date == null)
+            return -1;
+        int result = -1;
+        SimpleDateFormat dateFormat = null;
+        if (isValidDateFormat(date)) {
+            int c1 = 0, c2 = 0, c3 = 0;
+            for (int i = 0; i < date.length(); i++)
+            {
+                if (date.charAt(i) == '/')
+                    c1++;
+                if (date.charAt(i) == '-')
+                    c2++;
+                if (date.charAt(i) == '.')
+                    c3++;
+            }
+            if (c1 == 2)
+                dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            if (c2 == 2)
+                dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            if (c3 == 2)
+                dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+            dateFormat.setLenient(false);
+            try {
+                dateFormat.parse(date);
+                result = 1;
+            } catch (ParseException e) {
+                result = -1;
+            }
+        }
+        return result;
+    }
+}
+
+public class Source {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String date = in.nextLine();
+        Utility obj = new Utility();
+        
+        if (obj.checkDate(date) == 1)
+            System.out.println("Valid");
+        else
+            System.out.println("Invalid");
+    }
+}
+
+###############################################################################
+
+### Multiple Catch ###
+
+import java.util.*;
+import java.util.Scanner;
+
+class Sequence {
+    static int sequences(String arr) {
+        if (arr == null)
+            return 0;
+        List<Integer> a = new ArrayList<Integer>();
+        if (arr != null) {
+            StringTokenizer st =  new StringTokenizer(arr, ","); 
+            while (st.hasMoreTokens()) 
+                a.add(Integer.parseInt(st.nextToken()));   
+        }
+        
+        int len = a.size();
+        int l = len;
+        for (int i = 0; i < len-1; i++)
+        {
+            for (int j = 0; j < l-1; j++)
+                a.set(j, a.get(j+1)-a.get(j));
+            l--;
+        }
+        return a.get(0);
+    }
+}
+
+public class Source {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String arr = in.nextLine();
+        Sequence obj = new Sequence();
+        int ans = obj.sequences(arr);
+        System.out.println(ans);
+    }
+}
